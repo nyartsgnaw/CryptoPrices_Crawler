@@ -5,10 +5,7 @@ The code can
 2. extract finance features like movingAverage/RSI/change/exchanges from retrieved data.  
 
 ### Usage   
-1. data retrieving: ```python ./lib/get_prices.py ``` 
+1. Data retrieving: ```python ./lib/get_prices.py ```
    Find features at ```./data/features/```
-2. feature extracting: ```python ./lib/get_features.py```  
+2. Feature extracting: ```python ./lib/get_features.py```  
    Find pricecs at ```./data/prices/```
-
-
-
