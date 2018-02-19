@@ -212,8 +212,8 @@ class proxy_loader(object):
 			print('Without proxy')
 			html=requests.get(url,proxies=None)
 
-		if (time.time()-start) < 5:
-			sleep_time = random.randint(3,6)
+		if (time.time()-start) < timeout_duration/2:
+			sleep_time = random.randint(int(timeout_duration/3),int(timeout_duration/2))
 			time.sleep(sleep_time)
 		print('Downloading takes {} secs'.format(time.time()-start))
 		return html
