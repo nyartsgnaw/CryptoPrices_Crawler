@@ -5,6 +5,18 @@ import pandas as pd
 import numpy as np
 import time
 import os
+import sys
+try:
+	CWDIR = os.path.abspath(os.path.dirname(__file__))
+except:
+	CWDIR = os.getcwd()
+
+sys.path.append('{}/../utils'.format(CWDIR))
+
+
+from proxy_utils import initializer
+download_page = initializer(timeout_duration=5,test_url='http://www.lrcgc.com/artist-11.html') #get proxy enhanced requests.get
+
 
 def time_it(f):
     def wrapper(*args,**kwargs):
@@ -51,17 +63,17 @@ def read_price_csv(file_loc):
 
 	return df
 
-#page = requests.get('https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=ETH&limit=100000&aggregate=1')
+#page = download_page('https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=ETH&limit=100000&aggregate=1')
 
-#page1= requests.get('https://min-api.cryptocompare.com/data/pricehistorical?fsym=ETH&tsyms=BTC,USD,EUR&ts=0')
-#page2= requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH,DASH&tsyms=BTC,USD,EUR')
+#page1= download_page('https://min-api.cryptocompare.com/data/pricehistorical?fsym=ETH&tsyms=BTC,USD,EUR&ts=0')
+#page2= download_page('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH,DASH&tsyms=BTC,USD,EUR')
 
 
 def check_limits():
 	output = {}
 	for period in ['hour','minute','second']:
 		url= 'https://min-api.cryptocompare.com/stats/rate/{}/limit'.format(period)
-		page = requests.get(url)
+		page = download_page(url)
 		limit = page.json()['CallsLeft']['Histo']
 		output[period]=limit
 	return output
@@ -120,7 +132,7 @@ def price_historical(symbol, comparison_symbol, period='hour', limit=10000000, a
 	if all_data:
 		url += '&allData=true'
 
-	page = requests.get(url)
+	page = download_page(url)
 	while page.json()['Type']==99:
 		print('Return type 99')
 		called_hour = page.json()['YourCalls']['hour']['Histo']
@@ -136,7 +148,7 @@ def price_historical(symbol, comparison_symbol, period='hour', limit=10000000, a
 			print('Start waiting for 1s')
 			time.sleep(1)
 
-		page = requests.get(url)
+		page = download_page(url)
 
 	_data = page.json()['Data']
 	df = pd.DataFrame(_data)
