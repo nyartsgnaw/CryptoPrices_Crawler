@@ -4,18 +4,18 @@ import re
 import time
 pd.options.mode.chained_assignment = None  # default='warn'
 from utils.utils import time_it,read_price_csv
-from utils.multitask_utils import multi_work
-
 import os
-os.system('mkdir -p ./../data/features/day')
-os.system('mkdir -p ./../data/features/hour')
-os.system('mkdir -p ./../data/features/minute')
 import sys
 try:
 	CWDIR = os.path.abspath(os.path.dirname(__file__))
 except:
 	CWDIR = os.getcwd()
-sys.path.append(CWDIR+'/utils')
+sys.path.append('{}/utils'.format(CWDIR))
+from multitask_utils import multi_work
+
+os.system('mkdir -p {}/../data/prices/day'.format(CWDIR))
+os.system('mkdir -p {}/../data/prices/hour'.format(CWDIR))
+os.system('mkdir -p {}/../data/prices/minute'.format(CWDIR))
 
 class coin_price_df(object):
 	@time_it
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
 	df_sym = pd.read_csv('{}/../data/input/cryptocompareCoinList.csv'.format(CWDIR))
 	loop_ls = df_sym.Symbol.tolist()
-	loop_ls = ['EOS','ETH','USD','MANA','QSP']
+#	loop_ls = ['EOS','ETH','USD','MANA','QSP']
 	period = 'hour'
 
 	outs = multi_work(thelist=list(enumerate(loop_ls)),func=featurize_price,arguments=[[period,CWDIR]],scaling_number=scaling_number,on_disk=ON_DISK)

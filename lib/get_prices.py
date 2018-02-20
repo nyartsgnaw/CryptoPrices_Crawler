@@ -1,8 +1,4 @@
 import os
-os.system('mkdir -p ./../data/prices/day')
-os.system('mkdir -p ./../data/prices/hour')
-os.system('mkdir -p ./../data/prices/minute')
-
 import sys
 #https://medium.com/@agalea91/cryptocompare-api-quick-start-guide-ca4430a484d4
 #https://www.cryptocompare.com/api/
@@ -13,10 +9,13 @@ try:
 	CWDIR = os.path.abspath(os.path.dirname(__file__))
 except:
 	CWDIR = os.getcwd()
-sys.path.append(CWDIR+'/utils')
+sys.path.append('{}/utils'.format(CWDIR))
 from utils import  price_historical, update_price_df
 from multitask_utils import multi_work
 
+os.system('mkdir -p {}/../data/prices/day'.format(CWDIR))
+os.system('mkdir -p {}/../data/prices/hour'.format(CWDIR))
+os.system('mkdir -p {}/../data/prices/minute'.format(CWDIR))
 #loop_ls = ['ETH','USD','QSP','MANA','EOS']
 #hb_ls = ['EOS','ACT','MANA','DAT','POWR','REQ','QSP','CVC','UTK','EVX','TNT','MCO','QTUM','STORJ','BAT','OMG']
 def get_prices(coin,CWDIR):
