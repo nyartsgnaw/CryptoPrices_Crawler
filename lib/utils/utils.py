@@ -131,33 +131,38 @@ def price_historical(symbol, comparison_symbol, period='hour', limit=10000000, a
 		url += '&e={}'.format(exchange)
 	if all_data:
 		url += '&allData=true'
+	n_max= 20
+	i = 0
+	while i <=n_max:
+		try:
+			page = download_page(url)
+			if page.json()['Type']==99: #be polite
+#				print('Return type 99')
+				called_hour = page.json()['YourCalls']['hour']['Histo']
+				called_minute = page.json()['YourCalls']['minute']['Histo']
+				called_second = page.json()['YourCalls']['second']['Histo']
+				if called_hour >= 8000:#https://min-api.cryptocompare.com/stats/rate/hour/limit
+					print('Start waiting for 60s')
+					time.sleep(30)
+				if called_minute >=300:#https://min-api.cryptocompare.com/stats/rate/minute/limit
+					print('Start waiting for 5')
+					time.sleep(5)
+				if called_second >= 15:#https://min-api.cryptocompare.com/stats/rate/second/limit
+					print('Start waiting for 1s')
+					time.sleep(1)
+		except Exception as error:
+			i+=1
 
-	page = download_page(url)
-	while page.json()['Type']==99:
-		print('Return type 99')
-		called_hour = page.json()['YourCalls']['hour']['Histo']
-		called_minute = page.json()['YourCalls']['minute']['Histo']
-		called_second = page.json()['YourCalls']['second']['Histo']
-		if called_hour >= 8000:#https://min-api.cryptocompare.com/stats/rate/hour/limit
-			print('Start waiting for 1700s')
-			time.sleep(60)
-		if called_minute >=300:#https://min-api.cryptocompare.com/stats/rate/minute/limit
-			print('Start waiting for 50s')
-			time.sleep(1)
-		if called_second >= 15:#https://min-api.cryptocompare.com/stats/rate/second/limit
-			print('Start waiting for 1s')
-			time.sleep(1)
-
-		page = download_page(url)
-
+	df=pd.DataFrame(columns=['close', 'high', 'low', 'open', 'time', 'volumefrom', 'volumeto','timestamp'])
 	_data = page.json()['Data']
 	df = pd.DataFrame(_data)
 	if df.shape[0]>0:
 		df['timestamp'] = [datetime.datetime.fromtimestamp(d) for d in df.time]
 	else:
-		df=pd.DataFrame(columns=['close', 'high', 'low', 'open', 'time', 'volumefrom', 'volumeto','timestamp'])
-
-
+		print('Tried {} times for {} but failed.'.format(i,symbol))
+		if i == n_max:
+			print('Start waiting for 1700s')
+			time.sleep(1700)
 #        print('Get 0 data for {} by {}'.format(symbol,period))
 	return df
 

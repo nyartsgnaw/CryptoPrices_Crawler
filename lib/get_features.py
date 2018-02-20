@@ -151,7 +151,7 @@ def featurize_price(coin,period,CWIDR):
 
 if __name__ == '__main__':
 	''' ******************* user input  **************************** '''
-	scaling_number = 4
+	scaling_number = 16
 	ON_DISK = True
 	''' ******************* user input  **************************** '''
 
@@ -160,4 +160,4 @@ if __name__ == '__main__':
 	loop_ls = ['EOS','ETH','USD','MANA','QSP']
 	period = 'hour'
 
-	outs = multi_work(thelist=list(enumerate(loop_ls)),func=featurize_price,arguments=[[period,CWDIR]],iterable_input=False,scaling_number=scaling_number,on_disk=ON_DISK)
+	outs = multi_work(thelist=list(enumerate(loop_ls)),func=featurize_price,arguments=[[period,CWDIR]],scaling_number=scaling_number,on_disk=ON_DISK)

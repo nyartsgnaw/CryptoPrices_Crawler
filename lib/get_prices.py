@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 	''' ******************* user input  **************************** '''
 	ON_DISK = True
-	scaling_number = 4
+	scaling_number = 16
 	''' ******************* user input  **************************** '''
 	"""
 	url = 'https://www.cryptocompare.com/api/data/coinlist/'
@@ -64,4 +64,4 @@ if __name__ == '__main__':
 	df_sym = pd.read_csv('{}/../data/input/cryptocompareCoinList.csv'.format(CWDIR))
 	loop_ls = df_sym.Symbol.tolist()
 
-	outs = multi_work(thelist=list(enumerate(loop_ls)),func=get_prices,arguments=[[CWDIR]],iterable_input=False,scaling_number=scaling_number,on_disk=ON_DISK)
+	outs = multi_work(thelist=list(enumerate(loop_ls)),func=get_prices,arguments=[[CWDIR]],scaling_number=scaling_number,on_disk=ON_DISK)

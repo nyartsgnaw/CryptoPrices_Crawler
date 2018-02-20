@@ -203,19 +203,19 @@ class proxy_loader(object):
 			entries_length = len(proxies_list)
 			while html == None:
 				proxies = proxies_list[random.randint(0,entries_length-1)]
-				print('On proxy: {}'.format(proxies))
+#				print('On proxy: {}'.format(proxies))
 				html = timeout(requests.get,kwargs={'url':url,'proxies':proxies,'headers':header},timeout_duration=timeout_duration)
 				if (time.time() - start) >timeout_duration*3:
 					break
 
 		if html ==None:
-			print('Without proxy')
+#			print('Without proxy')
 			html=requests.get(url,proxies=None)
 
-		if (time.time()-start) < 5:
-			sleep_time = random.randint(3,6)
+		if (time.time()-start) < timeout_duration/2:
+			sleep_time = random.randint(int(timeout_duration/5),int(timeout_duration/3))
 			time.sleep(sleep_time)
-		print('Downloading takes {} secs'.format(time.time()-start))
+#		print('Downloading takes {} secs'.format(time.time()-start))
 		return html
 
 
